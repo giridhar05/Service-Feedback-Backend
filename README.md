@@ -1,7 +1,7 @@
 # Service-Feedback-Backend
 
 ## Overview
-FeedTrack Backend is the server-side application for the FeedTrack – Service Feedback Platform. It handles API requests, processes feedback data, and interacts with the MongoDB database.
+Service-Feedback-Backend is the server-side application for the FeedTrack – Service Feedback Platform. It handles API requests, processes feedback data, and interacts with the MongoDB database.
 
 ---
 
