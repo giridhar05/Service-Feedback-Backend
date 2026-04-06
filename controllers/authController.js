@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/User');
 const Team = require('../models/Team');
 
@@ -77,8 +78,57 @@ const loginUser = async (req, res) => {
   }
 };
 
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    
+    // Verify token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    
+    const payload = ticket.getPayload();
+    const { email, name, sub } = payload; 
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        auth_provider: 'google',
+        google_id: sub,
+        role: 'Employee'
+      });
+    } else if (!user.google_id) {
+      // Optioanlly link google account to local account with same email
+      user.google_id = sub;
+      user.auth_provider = 'google';
+      await user.save();
+    }
+
+    if (user && user.is_active) {
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        team_id: user.team_id,
+        token: generateToken(user._id)
+      });
+    } else {
+      res.status(401).json({ message: 'Account is inactive' });
+    }
+  } catch (error) {
+    console.error('Google Auth Error:', error);
+    res.status(400).json({ message: 'Google Authentication Failed' });
+  }
+};
+
 const getMe = async (req, res) => {
   res.status(200).json(req.user);
 };
 
-module.exports = { registerUser, loginUser, getMe };
+module.exports = { registerUser, loginUser, getMe, googleLogin };
