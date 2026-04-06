@@ -1,7 +1,67 @@
 # Service-Feedback-Backend
 
-## Overview
-Service-Feedback-Backend is the server-side application for the FeedTrack – Service Feedback Platform. It handles API requests, processes feedback data, and interacts with the MongoDB database.
+## Architecture Overview
+Service-Feedback Platform follows a client-server architecture:
+
+- Frontend handles user interaction
+- Backend processes requests and business logic
+- MongoDB stores feedback data
+
+### System Flow
+User → Frontend UI → API Request → Backend Server → Database  
+Database → Backend → Response → Frontend → User Interface
+
+---
+
+## Backend Architecture & Flow
+
+### Request Lifecycle
+
+Client Request → Route → Controller → Model → Database → Response
+
+---
+
+### Detailed Flow
+
+1. Client sends HTTP request (POST/GET)
+2. Express router maps request to endpoint
+3. Controller handles business logic
+4. Data is validated and processed
+5. Model interacts with MongoDB
+6. Database returns result
+7. Server sends structured response
+
+---
+
+### Data Flow Diagram (Text Representation)
+
+[Client Request]
+      ↓
+[Express Route]
+      ↓
+[Controller]
+      ↓
+[Model]
+      ↓
+[MongoDB]
+      ↓
+[Response Sent]
+
+---
+
+### Design Patterns Used
+
+- MVC (Model-View-Controller)
+- RESTful API design
+- Modular folder structure
+
+---
+
+### Scalability Design
+
+- Routes separated from logic
+- Easy integration of middleware
+- Extendable for authentication & analytics
 
 ---
 
